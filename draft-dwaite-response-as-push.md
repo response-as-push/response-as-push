@@ -2,7 +2,7 @@
 title = "Response as Push"
 abbrev = "rap"
 category = "info"
-docname = "draft-dwaite-response-as-push"
+docname = "draft-dwaite-response-as-push-latest"
 ipr = "none"
 workgroup = "todo"
 keyword = ["oauth", "openid", "connect"]
@@ -10,6 +10,7 @@ keyword = ["oauth", "openid", "connect"]
 [seriesInfo]
 name = "Internet-Draft"
 value = "draft-dwaite-response-as-push"
+status = "standard"
 
 [venue]
 group = "todo"
