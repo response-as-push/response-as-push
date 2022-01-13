@@ -52,9 +52,9 @@ TODO Introduction
 
 # Pushed Authorization Response Mode (PARM) {#parm}
 
-A common use-case for Self-Issued OPs is requesting and receiving Verifiable Presentations.  Both the authorization request and redirect response containing verifiable presentation data can grow quite large, such that the resulting URIs are longer than popular browsers can support.  The OAuth 2.0 Pushed Authorization Requests ([@!PAR]) RFC is a well defined solution for this on the request flow, but doesn't include how a large response could be similarly handled.
+A common use-case for Self-Issued OPs is requesting and receiving Verifiable Presentations.  Both the authorization request and redirect response containing verifiable presentation data can grow quite large, such that the resulting URIs are longer than popular browsers can support.  The OAuth 2.0 Pushed Authorization Requests ([@!RFC9126]) is a well defined solution for this on the request flow, but doesn't include how a large response could be similarly handled.
 
-To summarize the flow defined by [@!PAR]: when the request URI is too large, the Authorization Server (AS) can advertise a supporting endpoint in their metadata with two values: `pushed_authorization_request_endpoint` and `require_pushed_authorization_requests`.  The OAuth Client can then `POST` to this endpoint and receive back a short-lived unguessable URI which is subsequently used in the normal request flow as the `request_uri` parameter.
+To summarize the flow defined by [@!RFC9126]: when the request URI is too large, the Authorization Server (AS) can advertise a supporting endpoint in their metadata with two values: `pushed_authorization_request_endpoint` and `require_pushed_authorization_requests`.  The OAuth Client can then `POST` to this endpoint and receive back a short-lived unguessable URI which is subsequently used in the normal request flow as the `request_uri` parameter.
 
 In order to support this same pattern as PAR, the roles and names need to be updated for the response flow by a Self-Issued OP.  Instead of the AS advertising and hosting the endpoint, it is the Relying Party that provides this.  Instead of the OAuth Client detecting and performing the `POST`, it is the SIOP implementation that acts as the HTTP client.
 
@@ -107,7 +107,7 @@ The same error handling and response codes as defined in PAR apply equally to PA
 
 ## Response URI {#response_uri}
 
-Similarly to the `request_uri` as defined in [@!OpenID], PARM introduces a new `response_uri` parameter that is only valid when used in combination with the `redirect_uri` during a response flow.
+Similarly to the `request_uri` as defined in [@!OpenID.Core], PARM introduces a new `response_uri` parameter that is only valid when used in combination with the `redirect_uri` during a response flow.
 
 `response_uri`
 : URI parameter to be added to the `redirect_uri` as defined in {parm_success}. 
@@ -148,6 +148,8 @@ This document has no IANA actions.
 
 
 {backmatter}
+
+<reference anchor="OpenID.Core" target="http://openid.net/specs/openid-connect-core-1_0.html"> <front> <title>OpenID Connect Core 1.0 incorporating errata set 1</title> <author initials="N." surname="Sakimura" fullname="Nat Sakimura"> <organization>NRI</organization> </author> <author initials="J." surname="Bradley" fullname="John Bradley"> <organization>Ping Identity</organization> </author> <author initials="M." surname="Jones" fullname="Michael B. Jones"> <organization>Microsoft</organization> </author> <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros"> <organization>Google</organization> </author> <author initials="C." surname="Mortimore" fullname="Chuck Mortimore"> <organization>Salesforce</organization> </author> <date day="8" month="Nov" year="2014"/> </front> </reference>
 
 # Acknowledgments
 
