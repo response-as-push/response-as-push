@@ -37,14 +37,43 @@ email = "david+rap@alkaline-solutions.com"
 
 .# Abstract
 
-TODO Abstract
+This document defines mechanisms to allow larger responses to be returned from OAuth 2.0 authorization endpoints to a client than can be normally be supported encoded in URI due to platform and other constraints.  
+
+Contained within is a mechanism for indirectly referencing responses via a `response_uri` parameter. This specification also defines the behavior of a new response-as-push endpoint, which allows authorization servers to push the payload of an OAuth 2.0 authorization 
+response to the requesting client.
 
 {mainmatter}
 
 # Introduction
 
-TODO Introduction
+Several extensions have increased the amount of data sent in the browser requests and responses sent between the authorization endpoint and the client's redirect uri(s). One notable example is the OpenID Connect [(@!OpenID.Core)] `id_token` parameter, which is a JWT containing claims about user authentication as well as potential attributes.
 
+This information is by default encoded within the redirect URL, where it can potentially hit size limitations in place by the underlying transport as well as browser and server implementations.
+
+There have been some previous efforts to resolve this by moving this information outside the URL. 
+
+OAuth 2.0 [RFC6749] defines an optional mechanism to receive requests via HTTP `POST`, while JWT-Secured Authorization Requests [RFC9101] defines a way to represent a request as an object and pass it as a URL.  Pushed Authorization Requests [rfc9126] extends this with an Authorization Server endpoint where clients may send their request data before their redirection to the authorization endpoint.
+
+For the authorization response, OpenID Connect defines the  `response_mode` parameter and the ability to request a response be transmitted via `form_post`, defined in [OAuth.Responses] and [OAuth.Post]. However, this has many of the same limitations as the optional support for POST on request - in particular, that responses which cross application boundaries (such as going between a browser interaction with an AS to a client redirect_uri handled by a native application) only receive URI information, and cannot receive POSTed data.
+
+This document defines a complement to the pushed authorization requests in [RFC9126], named response-as-push (RAP). This is accomplished by:
+
+- Defining a `response_as_push_endpoint` client registration metadata value indicating where AS responses may be sent
+- Defining `supports_response_as_push` and `requires_response_as_push` AS metadata.
+- Defining a `response_uri` parameter which respresents the content of a response. This parameter takes the URI result of a previous push to the client endpoint.
+
+This specification does not define a Response Object in either object or JWT claims-based format, including leaving what data is returned from a resolvable response URI out of scope.
+
+# Response As Push
+
+To summarize the flow defined by [@!RFC9126]: when the request URI is too large, the Authorization Server (AS) can advertise a supporting endpoint in their metadata with two values: `pushed_authorization_request_endpoint` and `require_pushed_authorization_requests`.  The OAuth Client can then `POST` to this endpoint and receive back a short-lived unguessable URI which is subsequently used in the normal request flow as the `request_uri` parameter.
+
+In order to support this same pattern as PAR, the roles and names need to be updated for the response flow by a Self-Issued OP.  Instead of the AS advertising and hosting the endpoint, it is the Relying Party that provides this.  Instead of the OAuth Client detecting and performing the `POST`, it is the SIOP implementation that acts as the HTTP client.
+
+This document defines mechanisms to allow larger responses to be returned from OAuth 2.0 authorization endpoints to a client than can be normally be supported encoded in URI due to platform and other constraints.  
+
+Contained within is a mechanism for indirectly referencing responses via a `response_uri` parameter. This specification also defines the behavior of a new response-as-push endpoint, which allows authorization servers to push the payload of an OAuth 2.0 authorization 
+response to the requesting client.
 
 # Conventions and Definitions
 
@@ -52,11 +81,6 @@ TODO Introduction
 
 # Pushed Authorization Response Mode (PARM) {#parm}
 
-A common use-case for Self-Issued OPs is requesting and receiving Verifiable Presentations.  Both the authorization request and redirect response containing verifiable presentation data can grow quite large, such that the resulting URIs are longer than popular browsers can support.  The OAuth 2.0 Pushed Authorization Requests ([@!RFC9126]) is a well defined solution for this on the request flow, but doesn't include how a large response could be similarly handled.
-
-To summarize the flow defined by [@!RFC9126]: when the request URI is too large, the Authorization Server (AS) can advertise a supporting endpoint in their metadata with two values: `pushed_authorization_request_endpoint` and `require_pushed_authorization_requests`.  The OAuth Client can then `POST` to this endpoint and receive back a short-lived unguessable URI which is subsequently used in the normal request flow as the `request_uri` parameter.
-
-In order to support this same pattern as PAR, the roles and names need to be updated for the response flow by a Self-Issued OP.  Instead of the AS advertising and hosting the endpoint, it is the Relying Party that provides this.  Instead of the OAuth Client detecting and performing the `POST`, it is the SIOP implementation that acts as the HTTP client.
 
 The definition of PARM that follows is OPTIONAL for implementers.  It borrows heavily from the PAR RFC, focusing on highlighting where the roles and terms diverge.
 
@@ -149,7 +173,61 @@ This document has no IANA actions.
 
 {backmatter}
 
-<reference anchor="OpenID.Core" target="http://openid.net/specs/openid-connect-core-1_0.html"> <front> <title>OpenID Connect Core 1.0 incorporating errata set 1</title> <author initials="N." surname="Sakimura" fullname="Nat Sakimura"> <organization>NRI</organization> </author> <author initials="J." surname="Bradley" fullname="John Bradley"> <organization>Ping Identity</organization> </author> <author initials="M." surname="Jones" fullname="Michael B. Jones"> <organization>Microsoft</organization> </author> <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros"> <organization>Google</organization> </author> <author initials="C." surname="Mortimore" fullname="Chuck Mortimore"> <organization>Salesforce</organization> </author> <date day="8" month="Nov" year="2014"/> </front> </reference>
+<reference anchor="OpenID.Core" target="http://openid.net/specs/openid-connect-core-1_0.html">
+  <front>
+    <title>OpenID Connect Core 1.0 incorporating errata set 1</title> 
+    <author initials="N." surname="Sakimura" fullname="Nat Sakimura"> 
+      <organization>NRI</organization>
+    </author>
+    <author initials="J." surname="Bradley" fullname="John Bradley"> 
+      <organization>Ping Identity</organization>
+    </author>
+    <author initials="M." surname="Jones" fullname="Michael B. Jones"> 
+      <organization>Microsoft</organization>
+    </author>
+    <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
+      <organization>Google</organization>
+    </author>
+    <author initials="C." surname="Mortimore" fullname="Chuck Mortimore">
+      <organization>Salesforce</organization>
+    </author>
+    <date day="8" month="Nov" year="2014"/>
+  </front>
+</reference>
+
+<reference anchor="OAuth.Responses" target="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html">
+  <front>
+    <title>OAuth 2.0 Multiple Response Type Encoding Practices</title>
+    <author initials="B." surname="de Medeiros" fullname="Breno de Medeiros">
+      <organization>Google</organization>
+    </author>
+    <author initials="M." surname="Scurtescu" fullname="M. Scurtescu">
+      <organization>Google</organization>
+    </author>        
+    <author initials="P." surname="Tarjan" fullname="P. Tarjan">
+      <organization>Facebook</organization>
+    </author>
+    <author initials="M." surname="Jones" fullname="Michael B. Jones">
+      <organization>Microsoft</organization>
+    </author>
+    <date day="25" month="Feb" year="2014"/>
+  </front>
+</reference>
+
+<reference anchor="OAuth.Form" target="https://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html">
+ <front>
+    <title abbrev="OAuth 2.0 Form Post Response Mode">
+      OAuth 2.0 Form Post Response Mode
+    </title>
+    <author fullname="Michael B. Jones" initials="M.B." surname="Jones">
+      <organization abbrev="Microsoft">Microsoft</organization>
+    </author>
+    <author fullname="Brian Campbell" initials="B." surname="Campbell">
+      <organization abbrev="Ping Identity">Ping Identity</organization>
+    </author>
+    <date day="27" month="April" year="2015" />
+  </front>
+</reference>
 
 # Acknowledgments
 
