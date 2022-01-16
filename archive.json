@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-01-13T00:19:55.873299+00:00",
+  "timestamp": "2022-01-16T00:18:28.768566+00:00",
   "repo": "response-as-push/response-as-push",
   "labels": [
     {
@@ -56,26 +56,42 @@
       "id": "PR_kwDOGi4P2M4wwClp",
       "title": "Raw import of PARM content",
       "url": "https://github.com/response-as-push/response-as-push/pull/1",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "quartzjer",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2022-01-10T18:20:11Z",
-      "updatedAt": "2022-01-10T18:20:11Z",
+      "updatedAt": "2022-01-13T23:07:52Z",
       "baseRepository": "response-as-push/response-as-push",
       "baseRefName": "main",
       "baseRefOid": "6172b9fac1af5c6dfb4769a049a26d38edbfc475",
       "headRepository": "response-as-push/response-as-push",
       "headRefName": "import-siop-pr-content",
       "headRefOid": "6473b996d655109a1dea39751983a608a87c7dfb",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-01-13T23:07:52Z",
+      "mergedAt": "2022-01-13T23:07:51Z",
+      "mergedBy": "dwaite",
+      "mergeCommit": {
+        "oid": "ab33302e9051039bdcdc6948d572fbd0239c9ac4"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOGi4P2M4yzZua",
+          "commit": {
+            "abbreviatedOid": "6473b99"
+          },
+          "author": "dwaite",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-01-13T23:07:41Z",
+          "updatedAt": "2022-01-13T23:07:41Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
